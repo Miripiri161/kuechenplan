@@ -1209,7 +1209,7 @@ load(); render();
     } else {
       var st = window.__dbState, line = st === "ready" ? "Verbunden. Haken und Eingaben erscheinen sofort auf dem anderen Handy." : st === "timeout" || st === "error" ? "Keine Verbindung. Eingaben bleiben auf diesem Handy und werden später gesendet. Seite neu laden hilft oft." : "Verbinde …";
       var lr = window.__lastRemote ? new Date(window.__lastRemote).toLocaleTimeString("de-DE", {hour:"2-digit", minute:"2-digit", second:"2-digit"}) : "noch nichts";
-      o += '<p class="hint" style="margin:0 0 6px">' + esc(line) + '</p><p class="hint" style="margin:0 0 10px">Haushalt: …' + esc(c.slice(-4)) + ' · zuletzt vom Server: ' + esc(lr) + '</p>' +
+      o += '<p class="hint" style="margin:0 0 6px">' + esc(line) + '</p><p class="hint" style="margin:0 0 10px">Haushalt: …' + esc(c.slice(-4)) + ' · zuletzt vom Server: ' + esc(lr) + '</p>' + (window.__devLine ? window.__devLine() : '') +
         '<div class="actions"><button class="btn small" data-hh="share">Link für den Partner teilen</button><button class="btn ghost small" data-hh="show">Code anzeigen</button><button class="btn ghost small" data-hh="enter">Anderer Code</button></div>';
     }
     return o + '</section>';
@@ -1278,6 +1278,27 @@ load(); render();
     window.__dbState = "ready";
     document.addEventListener("visibilitychange", function(){ if (!document.hidden && F.disableNetwork && F.enableNetwork) { F.disableNetwork(fs).then(function(){ return F.enableNetwork(fs); }).catch(function(){}); } });
     window.__dbResolve(adapter);
+    try {
+      var devId = ""; try { devId = localStorage.getItem("kuechenplan-dev") || ""; } catch(_) {}
+      if (!devId) { devId = Math.random().toString(36).slice(2, 8); try { localStorage.setItem("kuechenplan-dev", devId); } catch(_) {} }
+      var ua = navigator.userAgent || "";
+      var kind = /iPhone/.test(ua) ? "iPhone" : /iPad/.test(ua) ? "iPad" : /Android/.test(ua) ? "Android" : /Macintosh/.test(ua) ? "Mac" : /Windows/.test(ua) ? "Windows" : "Gerät";
+      var inApp = (window.navigator.standalone === true) || (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+      var hbRef = F.doc(fs, base + "home/devices");
+      window.__hbWrites = 0; window.__devs = {};
+      var hb = function(){
+        var o = {}; o[devId] = { t: Date.now(), k: kind + (inApp ? " (App-Symbol)" : " (Browser)"), v: 4 };
+        F.setDoc(hbRef, o, { merge: true }).then(function(){ window.__hbWrites++; window.__hbOk = Date.now(); window.__hbErr = ""; }).catch(function(e){ window.__hbErr = String(e && (e.code || e.message) || e); if (window.hhRefresh) window.hhRefresh(); });
+      };
+      F.onSnapshot(hbRef, { includeMetadataChanges: true }, function(s){ if (s.metadata && s.metadata.fromCache) return; window.__devs = s.exists() ? s.data() : {}; if (window.hhRefresh) window.hhRefresh(); }, function(e){ window.__hbErr = "lesen: " + String(e && (e.code || e.message) || e); });
+      window.__devLine = function(){
+        var now = Date.now(), n = 0, parts = [], d = window.__devs || {};
+        Object.keys(d).forEach(function(k){ var x = d[k]; if (!x || !x.t) return; var age = Math.round((now - x.t) / 1000); if (age < 60) n++; parts.push((k === devId ? "dieses Handy" : (x.k || "Gerät")) + " vor " + (age < 90 ? age + " s" : Math.round(age / 60) + " min")); });
+        return '<p class="hint" style="margin:0 0 10px">Geräte gerade aktiv: <b>' + n + '</b>' + (parts.length ? ' (' + parts.join(", ") + ')' : '') + (window.__hbErr ? ' · Senden-Fehler: ' + window.__hbErr : '') + '</p>';
+      };
+      hb(); setInterval(function(){ if (!document.hidden) { hb(); if (window.hhRefresh) window.hhRefresh(); } }, 15000);
+      document.addEventListener("visibilitychange", function(){ if (!document.hidden) hb(); });
+    } catch(_) {}
     if (window.hhRefresh) window.hhRefresh();
   } catch(e) {
     window.__dbState = "error"; window.__dbError = String(e && (e.code || e.message) || e);
