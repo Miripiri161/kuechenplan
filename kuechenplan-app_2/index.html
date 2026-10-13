@@ -1207,12 +1207,22 @@ load(); render();
         '<div class="actions"><button class="btn" data-hh="new">Neuen Haushalt anlegen</button><button class="btn ghost" data-hh="enter">Code eingeben</button></div>';
     } else {
       var st = window.__dbState, line = st === "ready" ? "Verbunden. Haken und Eingaben erscheinen sofort auf dem anderen Handy." : st === "timeout" || st === "error" ? "Keine Verbindung. Eingaben bleiben auf diesem Handy und werden später gesendet. Seite neu laden hilft oft." : "Verbinde …";
-      o += '<p class="hint" style="margin:0 0 10px">' + esc(line) + '</p>' +
+      var lr = window.__lastRemote ? new Date(window.__lastRemote).toLocaleTimeString("de-DE", {hour:"2-digit", minute:"2-digit", second:"2-digit"}) : "noch nichts";
+      o += '<p class="hint" style="margin:0 0 6px">' + esc(line) + '</p><p class="hint" style="margin:0 0 10px">Haushalt: …' + esc(c.slice(-4)) + ' · zuletzt vom Server: ' + esc(lr) + '</p>' +
         '<div class="actions"><button class="btn small" data-hh="share">Link für den Partner teilen</button><button class="btn ghost small" data-hh="show">Code anzeigen</button><button class="btn ghost small" data-hh="enter">Anderer Code</button></div>';
     }
     return o + '</section>';
   }
   viewStart = function(){ return _vs() + card(); };
+  var _r = render;
+  render = function(){
+    _r();
+    var v = document.getElementById("view"); if (!v || !window.FIREBASE_CONFIG) return;
+    var msg = "";
+    if (!HH.code()) msg = "Dieses Handy ist noch nicht mit eurem Haushalt verbunden. Haken und Stimmen bleiben nur hier. Tippe hier und gib den Code ein.";
+    else if (window.__dbState === "timeout" || window.__dbState === "error") msg = "Keine Verbindung zum gemeinsamen Speicher. Seite neu laden. Eingaben werden später gesendet.";
+    if (msg) v.insertAdjacentHTML("afterbegin", '<button type="button" class="banner" style="width:100%;text-align:left;border:0;cursor:pointer" data-hh="enter">' + esc(msg) + '</button>');
+  };
   render();
   window.hhRefresh = function(){ if (typeof safeRender === "function") safeRender(); };
   function sheet(html){ document.getElementById("sheet").innerHTML = html; document.getElementById("sheetwrap").hidden = false; sheetOpen = true; }
@@ -1261,7 +1271,7 @@ load(); render();
         get: function(){ return F.getDoc(ref).then(function(s){ return { exists: s.exists(), data: function(){ return s.data(); } }; }).catch(function(e){ throw conv(e); }); },
         set: function(d){ return F.setDoc(ref, d).catch(function(e){ throw conv(e); }); },
         update: function(d){ return F.setDoc(ref, d, { merge: true }).catch(function(e){ throw conv(e); }); },
-        onSnapshot: function(ok, err){ return F.onSnapshot(ref, { includeMetadataChanges: false }, function(s){ if (!s.exists() && s.metadata && s.metadata.fromCache) return; ok({ exists: s.exists(), data: function(){ return s.data(); } }); }, function(e){ if (err) err(conv(e)); }); }
+        onSnapshot: function(ok, err){ return F.onSnapshot(ref, { includeMetadataChanges: false }, function(s){ if (!s.exists() && s.metadata && s.metadata.fromCache) return; if (!(s.metadata && s.metadata.fromCache)) window.__lastRemote = Date.now(); ok({ exists: s.exists(), data: function(){ return s.data(); } }); }, function(e){ if (err) err(conv(e)); }); }
       };
     } };
     window.__dbState = "ready";
