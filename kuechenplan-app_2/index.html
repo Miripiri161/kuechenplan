@@ -191,9 +191,10 @@ window.HH = (function(){
   function norm(s){ return String(s || "").toLowerCase().split("").filter(function(c){ return AL.indexOf(c) >= 0; }).join(""); }
   function store(c){ try { localStorage.setItem(KEY, c); } catch(_){} }
   var code = "";
-  try { var m = /[#&]h=([^&]+)/.exec(location.hash || ""); if (m) { var c = norm(decodeURIComponent(m[1])); if (c.length >= 20) { code = c; store(c); } try { history.replaceState(null, "", location.pathname + location.search); } catch(_){} } } catch(_){}
+  try { var m = /[#&]h=([^&]+)/.exec(location.hash || ""); if (m) { var c = norm(decodeURIComponent(m[1])); if (c.length >= 20) { code = c; store(c); } } } catch(_){}
   if (!code) { try { code = norm(localStorage.getItem(KEY)); } catch(_){} }
   if (code.length < 20) code = "";
+  if (code) { try { if (location.hash !== "#h=" + code) history.replaceState(null, "", location.pathname + location.search + "#h=" + code); } catch(_){} }
   return {
     norm: norm,
     code: function(){ return code; },
@@ -1203,8 +1204,8 @@ load(); render();
     if (!cfg) {
       o += '<p class="hint" style="margin:0">Die gemeinsame Speicherung ist noch nicht eingerichtet. Bis dahin bleibt alles nur auf diesem Handy.</p>';
     } else if (!c) {
-      o += '<p class="hint" style="margin:0 0 10px">Damit ihr beide dieselbe Liste seht: Einer legt den Haushalt an, der andere gibt den Code ein.</p>' +
-        '<div class="actions"><button class="btn" data-hh="new">Neuen Haushalt anlegen</button><button class="btn ghost" data-hh="enter">Code eingeben</button></div>';
+      o += '<p class="hint" style="margin:0 0 10px">Dieses Handy ist noch mit keinem Haushalt verbunden. Öffne den Link, den du bekommen hast, oder gib den Code ein. Nur wenn noch KEIN Handy von euch einen Haushalt hat, legst du einen neuen an.</p>' +
+        '<div class="actions"><button class="btn" data-hh="enter">Code eingeben</button><button class="btn ghost small" data-hh="new">Neuen Haushalt anlegen</button></div>';
     } else {
       var st = window.__dbState, line = st === "ready" ? "Verbunden. Haken und Eingaben erscheinen sofort auf dem anderen Handy." : st === "timeout" || st === "error" ? "Keine Verbindung. Eingaben bleiben auf diesem Handy und werden später gesendet. Seite neu laden hilft oft." : "Verbinde …";
       var lr = window.__lastRemote ? new Date(window.__lastRemote).toLocaleTimeString("de-DE", {hour:"2-digit", minute:"2-digit", second:"2-digit"}) : "noch nichts";
@@ -1230,7 +1231,7 @@ load(); render();
     var t = e.target.closest("[data-hh]"); if (!t) return;
     var a = t.getAttribute("data-hh");
     if (a === "new") {
-      if (!confirm("Neuen Haushalt anlegen? Danach bekommst du einen Code für das zweite Handy.")) return;
+      if (!confirm("Wirklich einen NEUEN Haushalt anlegen? Das brauchst du nur, wenn noch kein Handy von euch verbunden ist. Sonst auf Abbrechen tippen und den Code eingeben.")) return;
       HH.create(); location.reload();
     } else if (a === "enter") {
       sheet('<h3 style="margin-top:0">Code eingeben</h3><p class="hint">Den Code findest du auf dem Handy, das den Haushalt angelegt hat (Start, „Code anzeigen“). Oder öffne den geteilten Link.</p><input id="hhin" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:100%;box-sizing:border-box;padding:12px;font-size:16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg)" placeholder="xxxx xxxx xxxx xxxx xxxx"><div class="actions" style="margin-top:12px"><button class="btn" data-hh="save">Verbinden</button><button class="btn ghost" data-act="close">Abbrechen</button></div><p id="hhmsg" class="hint" role="status"></p>');
