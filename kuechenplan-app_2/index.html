@@ -1261,8 +1261,8 @@ load(); render();
     var app = A.initializeApp(cfg);
     var auth = AU.getAuth(app);
     var fs;
-    try { fs = F.initializeFirestore(app, { localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }), ignoreUndefinedProperties: true }); }
-    catch(_) { fs = F.initializeFirestore(app, { ignoreUndefinedProperties: true }); }
+    try { fs = F.initializeFirestore(app, { localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() }), ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true }); }
+    catch(_) { fs = F.initializeFirestore(app, { ignoreUndefinedProperties: true, experimentalAutoDetectLongPolling: true }); }
     await AU.signInAnonymously(auth);
     function conv(e){ var c = e && e.code ? String(e.code).replace(/^firestore\//, "").replace(/-/g, "_") : ""; var x = new Error(e && e.message || "error"); x.code = c; return x; }
     var base = "households/" + code + "/";
@@ -1276,6 +1276,7 @@ load(); render();
       };
     } };
     window.__dbState = "ready";
+    document.addEventListener("visibilitychange", function(){ if (!document.hidden && F.disableNetwork && F.enableNetwork) { F.disableNetwork(fs).then(function(){ return F.enableNetwork(fs); }).catch(function(){}); } });
     window.__dbResolve(adapter);
     if (window.hhRefresh) window.hhRefresh();
   } catch(e) {
