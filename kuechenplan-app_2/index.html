@@ -254,7 +254,8 @@ var ALDI = {
 };
 var ALWAYS = [
   {id:"a_eier",n:"Eier",s:"Aldi"}, {id:"a_toast",n:"Toast",s:"Aldi"}, {id:"a_emm",n:"Emmentaler",s:"Aldi"},
-  {id:"a_haf",n:"Haferflocken",s:"Aldi"}, {id:"a_mandel",n:"Mandelmilch",s:"Aldi"}
+  {id:"a_haf",n:"Haferflocken",s:"Aldi"}, {id:"a_mandel",n:"Mandelmilch (für Tobias, 300 ml × 5 Tage)",q:"2 Pck. à 1 l",s:"Aldi"},
+  {id:"a_hafer",n:"Hafermilch",q:"1 Pck. à 1 l",s:"Aldi"}, {id:"a_butter",n:"Butter",q:"1 Pck.",s:"Aldi"}, {id:"a_brot",n:"Brot für die Brotzeit",q:"1 Laib",s:"Aldi"}
 ];
 var STORES = ["Aldi","Zara Markt","Rewe"];
 var BASICS = ["Tomatenmark","Paprikamark","Gemüsebrühe","Salz"];
@@ -860,7 +861,7 @@ function viewListe(){
     });
     always.forEach(function(a){
       var done = !!S.checked[a.id]; if (!done) open++;
-      rows += '<div class="item' + (done ? ' done' : '') + '"><input class="check" type="checkbox" id="c_' + a.id + '" data-act="check" data-id="' + a.id + '"' + (done ? ' checked' : '') + ' aria-label="' + esc(a.n) + ' abhaken"><div class="nm"><label class="name" for="c_' + a.id + '">' + esc(a.n) + '</label></div><div class="rt"><span class="qty">immer dabei</span></div></div>';
+      rows += '<div class="item' + (done ? ' done' : '') + '"><input class="check" type="checkbox" id="c_' + a.id + '" data-act="check" data-id="' + a.id + '"' + (done ? ' checked' : '') + ' aria-label="' + esc(a.n) + ' abhaken"><div class="nm"><label class="name" for="c_' + a.id + '">' + esc(a.n) + '</label></div><div class="rt"><span class="qty">' + esc(a.q || "immer dabei") + '</span></div></div>';
     });
     out += '<section class="card"><div class="store-h"><h3>' + st + '</h3><span>' + open + ' von ' + total + ' offen</span></div>' + rows + '</section>';
   });
