@@ -221,7 +221,7 @@ window.HH = (function(){
 /* ===== Daten und Logik (ohne Browser-Zugriff, einzeln testbar) ===== */
 var CATALOG = {
   nudeln:{n:"Nudeln",u:"g",s:"Aldi"}, reis:{n:"Reis",u:"g",s:"Aldi"}, kartoffeln:{n:"Kartoffeln",u:"g",s:"Zara Markt"},
-  suesskartoffeln:{n:"Süßkartoffeln",u:"g",s:"Zara Markt"}, mehl:{n:"Weizenmehl",u:"g",s:"Aldi"},
+  suesskartoffeln:{n:"Süßkartoffeln",u:"g",s:"Zara Markt"}, mehl:{n:"Pizzamehl (Type 00)",u:"g",s:"Aldi"},
   sojachunks:{n:"Soja-Chunks",u:"g",s:"Rewe"}, tofu:{n:"Tofu natur",u:"g",s:"Rewe"},
   veganhack:{n:"Veganes Hack",u:"g",s:"Rewe"}, belugalinsen:{n:"Belugalinsen",u:"g",s:"Zara Markt"},
   kichererbsen:{n:"Kichererbsen (Dose)",u:"Dose",s:"Zara Markt"}, kidneybohnen:{n:"Kidneybohnen (Dose)",u:"Dose",s:"Zara Markt"},
@@ -241,7 +241,7 @@ var ALDI_DATE = "11.10.2026";
 var ALDI = {
   nudeln:{prod:"Spaghetti 500 g",pack:500,price:0.69},
   reis:{prod:"Parboiled Reis 1 kg",pack:1000,price:1.39},
-  mehl:{prod:"Weizenmehl Type 405, 1 kg",pack:1000,price:0.59},
+  
   passierte:{prod:"Passierte Tomaten 500 g",pack:500,price:0.65},
   skyr:{prod:"Skyr 500 g",pack:500,price:1.29},
   feta:{prod:"Bio-Feta 200 g",pack:200,price:2.89},
@@ -255,7 +255,8 @@ var ALDI = {
 var ALWAYS = [
   {id:"a_eier",n:"Eier",s:"Aldi"}, {id:"a_toast",n:"Toast",s:"Aldi"}, {id:"a_emm",n:"Emmentaler",s:"Aldi"},
   {id:"a_haf",n:"Haferflocken",s:"Aldi"}, {id:"a_mandel",n:"Mandelmilch (für Tobias, 300 ml × 5 Tage)",q:"2 Pck. à 1 l",s:"Aldi"},
-  {id:"a_hafer",n:"Hafermilch",q:"1 Pck. à 1 l",s:"Aldi"}, {id:"a_butter",n:"Butter",q:"1 Pck.",s:"Aldi"}, {id:"a_brot",n:"Brot für die Brotzeit",q:"1 Laib",s:"Aldi"}
+  {id:"a_hafer",n:"Hafermilch",q:"1 Pck. à 1 l",s:"Aldi"}, {id:"a_butter",n:"Butter",q:"1 Pck.",s:"Aldi"}, {id:"a_mehl1050",n:"Weizenmehl Type 1050 (fürs Brot)",q:"1 kg",s:"Aldi"},
+  {id:"a_ang_kohlrabi",n:"Kohlrabi, roh essbar (Angebot REWE bis 17.10.)",q:"0,44 €",s:"Rewe"}, {id:"a_ang_grapefruit",n:"Grapefruit (Angebot REWE bis 17.10.)",q:"0,69 €",s:"Rewe"}, {id:"a_ang_feigen",n:"Feigen, 500 g (Angebot REWE bis 17.10.)",q:"2,22 €",s:"Rewe"}
 ];
 var STORES = ["Aldi","Zara Markt","Rewe"];
 var BASICS = ["Tomatenmark","Paprikamark","Gemüsebrühe","Salz"];
