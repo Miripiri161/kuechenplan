@@ -84,6 +84,19 @@ main { padding: 20px 16px 0; display: flex; flex-direction: column; gap: 16px; }
 .card.big { padding: 18px; }
 .day { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; margin: 0 0 4px; }
 .dish { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.2; margin: 0; text-align: left; background: none; border: 0; padding: 0; }
+article.card:has(.dish[data-act="open"]) { cursor: pointer; }
+/* Gemeinsam nutzen: aufklappbar, eingeklappt nur eine Zeile */
+.hhd > summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 28px; }
+.hhd > summary::-webkit-details-marker { display: none; }
+.hhd > summary .day { margin: 0; }
+.hhd > summary .st { font-size: .82rem; color: var(--muted); margin-left: auto; }
+.hhd > summary::after { content: "›"; font-size: 1.3rem; line-height: 1; color: var(--muted); transition: transform .15s; }
+.hhd[open] > summary::after { transform: rotate(90deg); }
+.ev-h { font-family: var(--font-display); font-size: 1.05rem; margin: 16px 0 4px; }
+.ev { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: 8px; }
+.ev th, .ev td { text-align: left; padding: 7px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.ev th { color: var(--muted); font-weight: 600; font-size: .78rem; }
+.ev tr.diff td:first-child { border-left: 3px solid var(--mustard); padding-left: 8px; }
 .row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .chip { font-size: .78rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--surface-2); color: var(--fg); }
@@ -1133,7 +1146,16 @@ function vote(id, v){ setVote(id, v); render(); }
 function currentCardId(){ var c = document.getElementById("card"); return c ? c.getAttribute("data-id") : null; }
 
 document.addEventListener("click", function(e){
-  var t = e.target.closest("[data-act]"); if (!t) { if (e.target.id === "sheetwrap") closeSheet(); return; }
+  var t = e.target.closest("[data-act]"); if (!t) {
+    if (e.target.id === "sheetwrap") { closeSheet(); return; }
+    /* Tipp irgendwo auf die Gerichtskarte (Bild, Chips, freie Fläche) öffnet das Rezept */
+    var cardEl = e.target.closest("article.card");
+    if (cardEl && !e.target.closest("button, a, input, select, label, textarea, summary")) {
+      var dishBtn = cardEl.querySelector('.dish[data-act="open"]');
+      if (dishBtn) openSheet(dishBtn.getAttribute("data-id"));
+    }
+    return;
+  }
   var a = t.getAttribute("data-act");
   if (a === "tab") { S.tab = t.getAttribute("data-v"); render(); window.scrollTo(0, 0); }
   else if (a === "rater") { S.rater = t.getAttribute("data-v"); undo = null; save(); render(); }
@@ -1202,20 +1224,48 @@ load(); render();
   var _vs = viewStart;
   function card(){
     var c = HH.code(), cfg = !!window.FIREBASE_CONFIG;
-    var o = '<section class="card" id="hhcard"><p class="day">Gemeinsam nutzen</p>';
+    var o = "", sumTxt = "", force = false;
     if (!cfg) {
-      o += '<p class="hint" style="margin:0">Die gemeinsame Speicherung ist noch nicht eingerichtet. Bis dahin bleibt alles nur auf diesem Handy.</p>';
+      sumTxt = "nicht eingerichtet"; force = true;
+      o +='<p class="hint" style="margin:0">Die gemeinsame Speicherung ist noch nicht eingerichtet. Bis dahin bleibt alles nur auf diesem Handy.</p>';
     } else if (!c) {
+      sumTxt = "nicht verbunden"; force = true;
       o += '<p class="hint" style="margin:0 0 10px">Dieses Handy ist noch mit keinem Haushalt verbunden. Öffne den Link, den du bekommen hast, oder gib den Code ein. Nur wenn noch KEIN Handy von euch einen Haushalt hat, legst du einen neuen an.</p>' +
         '<div class="actions"><button class="btn" data-hh="enter">Code eingeben</button><button class="btn ghost small" data-hh="new">Neuen Haushalt anlegen</button></div>';
     } else {
       var st = window.__dbState, line = st === "ready" ? ((window.__hbOk && Date.now() - window.__hbOk < 60000) ? "Verbunden. Haken und Eingaben erscheinen sofort auf dem anderen Handy." : (window.__hbStart && Date.now() - window.__hbStart > 25000 ? "NICHT verbunden: dieses Handy erreicht den Server nicht. Öffne den Link direkt in Safari (nicht aus WhatsApp)." : "Verbinde …")) : st === "timeout" || st === "error" ? "Keine Verbindung. Eingaben bleiben auf diesem Handy und werden später gesendet. Seite neu laden hilft oft." : "Verbinde …";
-      var lr = window.__lastRemote ? new Date(window.__lastRemote).toLocaleTimeString("de-DE", {hour:"2-digit", minute:"2-digit", second:"2-digit"}) : "noch nichts";
+      var lr = window.__lastRemote ? new Date(window.__lastRemote).toLocaleTimeString("de-DE", {hour:"2-digit", minute:"2-digit", second:"2-digit"}) : "noch keine Änderung seit dem Start";
+      var okNow = st === "ready" && window.__hbOk && Date.now() - window.__hbOk < 60000;
+      sumTxt = okNow ? "Verbunden" : (st === "timeout" || st === "error" || (window.__hbStart && Date.now() - window.__hbStart > 25000)) ? "Keine Verbindung" : "Verbinde …";
       o += '<p class="hint" style="margin:0 0 6px">' + esc(line) + '</p><p class="hint" style="margin:0 0 10px">Haushalt: …' + esc(c.slice(-4)) + ' · zuletzt vom Server: ' + esc(lr) + '</p>' + (window.__devLine ? window.__devLine() : '') +
-        '<div class="actions"><button class="btn small" data-hh="share">Link für den Partner teilen</button><button class="btn ghost small" data-hh="show">Code anzeigen</button><button class="btn ghost small" data-hh="enter">Anderer Code</button></div>';
+        '<div class="actions"><button class="btn small" data-hh="share">Link für den Partner teilen</button><button class="btn ghost small" data-hh="show">Code anzeigen</button><button class="btn ghost small" data-hh="enter">Anderer Code</button></div>' + evalHtml();
     }
-    return o + '</section>';
+    window.__hhForce = force;
+    var open = force || window.__hhOpen;
+    return '<details class="card hhd" id="hhcard"' + (open ? ' open' : '') + '><summary><span class="day">Gemeinsam nutzen</span><span class="st">' + esc(sumTxt) + '</span></summary><div style="margin-top:12px">' + o + '</div></details>';
   }
+  /* Auswertung: wie ihr beide abgestimmt habt (me = Miri, man = Tobias) */
+  function evalHtml(){
+    var L = { like: "mag ich", dislike: "mag ich nicht", love: "besonders lecker" };
+    var cnt = { diff: 0, no: 0, yes: 0, open: 0 };
+    var rows = RECIPES.map(function(r){
+      var v = S.ratings[r.id] || {}, a = v.me, b = v.man, cat;
+      if (!a || !b) cat = 3;
+      else if ((a === "dislike") !== (b === "dislike")) cat = 0;
+      else if (a === "dislike") cat = 1;
+      else cat = 2;
+      cnt[["diff", "no", "yes", "open"][cat]]++;
+      return { name: r.name, a: a, b: b, cat: cat };
+    }).sort(function(x, y){ return x.cat - y.cat || (x.name < y.name ? -1 : 1); });
+    var h = '<p class="ev-h">Auswertung der Bewertungen</p>' +
+      '<p class="hint" style="margin:0">Uneinig: <b>' + cnt.diff + '</b> · beide mögen: <b>' + cnt.yes + '</b> · beide nein: <b>' + cnt.no + '</b> · noch offen: <b>' + cnt.open + '</b>. Gelb markiert heißt: ihr seid euch uneinig.</p>' +
+      '<table class="ev"><thead><tr><th>Gericht</th><th>Miri</th><th>Tobias</th></tr></thead><tbody>';
+    rows.forEach(function(x){
+      h += '<tr' + (x.cat === 0 ? ' class="diff"' : '') + '><td>' + esc(x.name) + '</td><td>' + esc(L[x.a] || "–") + '</td><td>' + esc(L[x.b] || "–") + '</td></tr>';
+    });
+    return h + '</tbody></table>';
+  }
+  document.addEventListener("toggle", function(e){ if (e.target && e.target.id === "hhcard" && !window.__hhForce) window.__hhOpen = !!e.target.open; }, true);
   viewStart = function(){ return _vs() + card(); };
   var _r = render;
   render = function(){
