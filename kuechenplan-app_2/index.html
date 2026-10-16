@@ -691,8 +691,8 @@ function viewStart(){
 /* ===== Angebote der Woche (von Claude montags in die Datenbank geschrieben) ===== */
 var OFFERS = null;
 /* ===== Gemeinsame Daten: jeder Eintrag wird einzeln gespeichert und wartet offline in einer Warteschlange ===== */
-var GROUPS = { plan:["plan"], shop:["checked","have"], ratings:["ratings"], prices:["prices"], bons:["receipts"], learn:["learn"], settings:["goal","trip"], stock:["stock"] };
-var DEFAULTS = { plan:null, checked:{}, have:{}, ratings:{}, prices:{}, receipts:{}, learn:{}, goal:null, trip:{}, stock:{} };
+var GROUPS = { plan:["plan"], shop:["checked","have"], ratings:["ratings"], prices:["prices"], bons:["receipts"], learn:["learn"], settings:["goal","trip","bonsLink"], stock:["stock"] };
+var DEFAULTS = { plan:null, checked:{}, have:{}, ratings:{}, prices:{}, receipts:{}, learn:{}, goal:null, trip:{}, bonsLink:null, stock:{} };
 var DB = null, dbReady = false, docExists = {}, inflight = {}, sending = {}, syncMsg = "", retryT = null;
 function clone(o){ return o === undefined ? undefined : JSON.parse(JSON.stringify(o)); }
 function isObj(x){ return x !== null && typeof x === "object" && !Array.isArray(x); }
@@ -1238,11 +1238,24 @@ load(); render();
       var okNow = st === "ready" && window.__hbOk && Date.now() - window.__hbOk < 60000;
       sumTxt = okNow ? "Verbunden" : (st === "timeout" || st === "error" || (window.__hbStart && Date.now() - window.__hbStart > 25000)) ? "Keine Verbindung" : "Verbinde …";
       o += '<p class="hint" style="margin:0 0 6px">' + esc(line) + '</p><p class="hint" style="margin:0 0 10px">Haushalt: …' + esc(c.slice(-4)) + ' · zuletzt vom Server: ' + esc(lr) + '</p>' + (window.__devLine ? window.__devLine() : '') +
-        '<div class="actions"><button class="btn small" data-hh="share">Link für den Partner teilen</button><button class="btn ghost small" data-hh="show">Code anzeigen</button><button class="btn ghost small" data-hh="enter">Anderer Code</button></div>' + evalHtml();
+        '<div class="actions"><button class="btn small" data-hh="share">Link für den Partner teilen</button><button class="btn ghost small" data-hh="show">Code anzeigen</button><button class="btn ghost small" data-hh="enter">Anderer Code</button></div>' + bonsLinkHtml() + evalHtml();
     }
     window.__hhForce = force;
     var open = force || window.__hhOpen;
     return '<details class="card hhd" id="hhcard"' + (open ? ' open' : '') + '><summary><span class="day">Gemeinsam nutzen</span><span class="st">' + esc(sumTxt) + '</span></summary><div style="margin-top:12px">' + o + '</div></details>';
+  }
+  /* Link zur Excel mit den Kassenbons: wird einmal eingetragen und mit dem Haushalt geteilt */
+  function xlUrl(v){
+    v = String(v || "").trim();
+    if (!/^https:\/\//i.test(v) || v.length > 2000) return "";
+    try { var u = new URL(v); return u.protocol === "https:" ? u.href : ""; } catch(_) { return ""; }
+  }
+  function bonsLinkHtml(){
+    var u = xlUrl(S.bonsLink);
+    if (!u) return '<div class="actions" style="margin-top:8px"><button class="btn ghost small" data-hh="xl">Excel-Link für die Bons eintragen</button></div>';
+    var host = ""; try { host = new URL(u).hostname; } catch(_) {}
+    return '<div class="actions" style="margin-top:8px"><a class="btn small" style="text-decoration:none;display:inline-block" href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">Excel mit den Bons öffnen</a><button class="btn ghost small" data-hh="xl">Link ändern</button></div>' +
+      '<p class="hint" style="margin:6px 0 0">Öffnet ' + esc(host) + '</p>';
   }
   /* Auswertung: wie ihr beide abgestimmt habt (me = Miri, man = Tobias) */
   function evalHtml(){
@@ -1288,6 +1301,14 @@ load(); render();
       HH.create(); location.reload();
     } else if (a === "enter") {
       sheet('<h3 style="margin-top:0">Code eingeben</h3><p class="hint">Den Code findest du auf dem Handy, das den Haushalt angelegt hat (Start, „Code anzeigen“). Oder öffne den geteilten Link.</p><input id="hhin" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:100%;box-sizing:border-box;padding:12px;font-size:16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg)" placeholder="xxxx xxxx xxxx xxxx xxxx"><div class="actions" style="margin-top:12px"><button class="btn" data-hh="save">Verbinden</button><button class="btn ghost" data-act="close">Abbrechen</button></div><p id="hhmsg" class="hint" role="status"></p>');
+    } else if (a === "xl") {
+      sheet('<h3 style="margin-top:0">Excel mit den Bons</h3><p class="hint">Füge hier den Link zur Excel ein, zum Beispiel aus Google Drive oder OneDrive. Er wird für euch beide gespeichert. Stelle die Freigabe dort so ein, dass nur ihr beide den Link nutzen könnt.</p><input id="xlin" type="url" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" value="' + esc(xlUrl(S.bonsLink)) + '" style="width:100%;box-sizing:border-box;padding:12px;font-size:16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg)" placeholder="https://…"><div class="actions" style="margin-top:12px"><button class="btn" data-hh="xlsave">Speichern</button>' + (xlUrl(S.bonsLink) ? '<button class="btn ghost" data-hh="xlclear">Link entfernen</button>' : '') + '<button class="btn ghost" data-act="close">Abbrechen</button></div><p id="xlmsg" class="hint" role="status"></p>');
+    } else if (a === "xlsave") {
+      var xv = xlUrl(document.getElementById("xlin").value);
+      if (!xv) { document.getElementById("xlmsg").textContent = "Das ist kein gültiger Link. Er muss mit https:// beginnen."; return; }
+      S.bonsLink = xv; save(); enqueue("settings", { bonsLink: xv }); closeSheet(); render();
+    } else if (a === "xlclear") {
+      S.bonsLink = null; save(); enqueue("settings", { bonsLink: null }); closeSheet(); render();
     } else if (a === "save") {
       var v = document.getElementById("hhin").value;
       if (!HH.valid(v)) { document.getElementById("hhmsg").textContent = "Der Code ist zu kurz. Er hat 20 Zeichen."; return; }
