@@ -820,7 +820,7 @@ window.addEventListener("online", function(){ flushAll(); });
     });
   } catch(e){}
 })();
-function curOffers(){ return OFFERS || (reweActive() ? REWE_OFFERS : null); }
+function curOffers(){ return reweActive() ? REWE_OFFERS : (OFFERS || null); }
 function offerDishes(){
   var O = curOffers();
   if (!O || !Array.isArray(O.recipes)) return [];
