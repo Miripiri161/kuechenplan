@@ -229,7 +229,10 @@ var CATALOG = {
   passierte:{n:"Passierte Tomaten",u:"g",s:"Aldi"}, zwiebeln:{n:"Zwiebeln",u:"g",s:"Zara Markt"},
   knoblauch:{n:"Knoblauch",u:"Knolle",s:"Zara Markt"}, moehren:{n:"Möhren",u:"g",s:"Zara Markt"}, paprika:{n:"Paprika",u:"Stk",s:"Zara Markt"},
   tomaten:{n:"Tomaten (frisch)",u:"g",s:"Zara Markt"}, spitzkohl:{n:"Spitzkohl",u:"g",s:"Zara Markt"}, brokkoli:{n:"Brokkoli",u:"Stk",s:"Zara Markt"}, blumenkohl:{n:"Blumenkohl",u:"Stk",s:"Zara Markt"},
-  fruehlingszwiebeln:{n:"Frühlingszwiebeln",u:"Bund",s:"Zara Markt"}, cremefraiche:{n:"Crème fraîche",u:"g",s:"Aldi"},
+  fruehlingszwiebeln:{n:"Frühlingszwiebeln",u:"Bund",s:"Zara Markt"},
+  suppengruen:{n:"Suppengrün",u:"g",s:"Rewe"}, rotelinsen:{n:"Rote Linsen",u:"g",s:"Aldi"}, rosenkohl:{n:"Rosenkohl",u:"g",s:"Rewe"},
+  hokkaido:{n:"Hokkaido-Kürbis",u:"g",s:"Rewe"}, datteltomaten:{n:"Datteltomaten",u:"g",s:"Aldi"}, tortelloni:{n:"Käse-Tortelloni (Kühlregal)",u:"g",s:"Aldi"},
+  hartkaese:{n:"Parmesan oder vegetarischer Hartkäse",u:"g",s:"Aldi"}, sahne:{n:"Sahne",u:"ml",s:"Aldi"}, cremefraiche:{n:"Crème fraîche",u:"g",s:"Aldi"},
   skyr:{n:"Skyr",u:"g",s:"Aldi"}, feta:{n:"Feta",u:"g",s:"Aldi"}, halloumi:{n:"Halloumi",u:"g",s:"Rewe"},
   mozzarella:{n:"Mozzarella",u:"Stk",s:"Aldi"}, emmentaler:{n:"Emmentaler",u:"g",s:"Aldi"}, eier:{n:"Eier",u:"Stk",s:"Aldi"},
   kokosmilch:{n:"Kokosmilch",u:"ml",s:"Rewe"}, currypaste:{n:"Currypaste (rot)",u:"Glas",s:"Rewe"},
@@ -319,7 +322,22 @@ var RECIPES = [
   ing:[["nudeln",400],["weissebohnen",2],["passierte",400],["mozzarella",2],["knoblauch",0.2],["zwiebeln",150]],
   pantry:["Olivenöl","Basilikum","Chiliflocken"],
   steps:["Zwiebel und Knoblauch in Olivenöl anbraten.","Passierte Tomaten und Bohnen zugeben, 10 Minuten köcheln.","Nudeln kochen.","Alles mischen und Mozzarella in Stücken unterheben.","Mit Basilikum und etwas Chili servieren."],
-  variants:["Mit Kichererbsen statt Bohnen","Mit Soja-Hack"]}
+  variants:["Mit Kichererbsen statt Bohnen","Mit Soja-Hack"]},
+ {id:"gemuesebolo",name:"Gemüse-Bolognese mit Linsen und Bohnen",min:35,heat:0,
+  ing:[["nudeln",400],["suppengruen",600],["zwiebeln",150],["knoblauch",0.3],["rotelinsen",200],["kidneybohnen",1],["passierte",500]],
+  pantry:["Tomatenmark","Olivenöl","Paprikapulver","Oregano"],
+  steps:["Zwiebel und fein gehacktes Suppengrün in Öl 8 bis 10 Minuten kräftig anbraten.","Knoblauch und Tomatenmark kurz mitrösten.","Rote Linsen, Passierte Tomaten und etwa 500 ml Wasser dazugeben, würzen und 15 Minuten köcheln lassen.","Abgetropfte Bohnen zugeben und weitere 5 bis 10 Minuten köcheln, bei Bedarf Wasser nachgießen.","Nudeln kochen und mit der Sauce servieren."],
+  variants:["Mit Räuchertofu (200 g, zerbröselt und kross angebraten)","Mit fein gehackten Champignons statt Linsen","Mit Walnüssen für mehr Biss"]},
+ {id:"rosenkohlofen",name:"Ofen-Rosenkohl mit Kartoffeln und Parmesan",min:35,heat:0,
+  ing:[["rosenkohl",800],["kartoffeln",800],["hartkaese",60],["skyr",300],["zitrone",1]],
+  pantry:["Olivenöl","Salz","Pfeffer"],
+  steps:["Rosenkohl halbieren, Kartoffeln in Spalten schneiden und beides mit Öl, Salz und Pfeffer mischen.","Bei 200 °C etwa 30 Minuten backen, nach 15 Minuten einmal wenden.","In den letzten 5 Minuten den Käse darüberreiben.","Skyr mit Zitronensaft, Salz und Pfeffer zum Dip verrühren und dazu servieren."],
+  variants:["Mit Spiegelei obendrauf","Mit Hartkäse mit mikrobiellem Lab, falls ihr streng vegetarisch esst (Parmesan enthält tierisches Lab)"]},
+ {id:"kuerbistortelloni",name:"Kürbis-Feta-Sauce mit Tortelloni",min:45,heat:0,
+  ing:[["hokkaido",800],["feta",300],["zwiebeln",150],["paprika",2],["datteltomaten",400],["knoblauch",1],["sahne",100],["tortelloni",600]],
+  pantry:["Olivenöl","Salz","Pfeffer"],
+  steps:["Kürbis in Würfeln (Schale bleibt dran), Zwiebel, Paprika und Tomaten in eine Auflaufform geben.","Die Knoblauchknolle quer halbieren und mit der Schnittfläche nach oben dazulegen, den Feta in die Mitte setzen und alles mit Öl, Salz und Pfeffer würzen.","Bei 200 °C 30 bis 35 Minuten backen, bis der Kürbis weich ist und die Tomaten aufplatzen.","Den weichen Knoblauch aus der Schale drücken und mit dem Feta, der Hälfte des Ofengemüses und der Sahne pürieren. Etwas Nudelwasser macht die Sauce cremiger.","Tortelloni nur etwa 2 Minuten kochen (siehe Packung) und mit Sauce und restlichem Ofengemüse mischen."],
+  variants:["Mit weniger Feta, weil die Tortelloni schon Käse enthalten","Mit Ravioli (Steinhaus Pasta Rustica) statt Tortelloni"]}
 ];
 var PIZZA = {id:"pizza",name:"Sauerteig-Pizza",min:30,heat:0,
   ing:[["mehl",500],["passierte",250],["mozzarella",3],["paprika",1],["zwiebeln",150],["emmentaler",100]],
@@ -425,7 +443,7 @@ function summarize(items){
   return {total: total, known: known, count: items.length};
 }
 /* ===== Preise lernen, Sparen, Laden-Check, Planwahl (rein rechnerisch, einzeln testbar) ===== */
-var PERISH = ["tomaten","paprika","spitzkohl","brokkoli","blumenkohl","moehren","fruehlingszwiebeln","feta","mozzarella","halloumi","skyr","cremefraiche","tofu","zitrone"];
+var PERISH = ["tomaten","paprika","spitzkohl","brokkoli","blumenkohl","moehren","fruehlingszwiebeln","feta","mozzarella","halloumi","skyr","cremefraiche","tofu","zitrone","rosenkohl","datteltomaten","suppengruen"];
 function normName(t){ return String(t || "").toLowerCase().replace(/[^a-zäöüß ]+/g, " ").replace(/\s+/g, " ").trim(); }
 function learnKey(t){ return normName(t).replace(/ /g, "_").slice(0, 40); }
 function unitPrice(u, total, qty){ if (!(total > 0) || !(qty > 0)) return null; return (u === "g" || u === "ml") ? total / qty * 1000 : total / qty; }
@@ -556,6 +574,9 @@ var ILLU = {
  gulasch:{c:"bowl",g:"#c8501f",l:[["cube","#7a3a22",9,9],["cube","#f1d77a",8,8],["leaf","#3f8a3a",3,5]]},
  halloumi:{c:"pan",g:"#6b5a44",l:[["strip","#d7e6a4",14,11],["dot","#2f2a26",16,4],["cube","#e9cf8f",5,13]]},
  bohnennudeln:{c:"plate",g:"#f0dc9a",l:[["strip","#f4e3a8",14,10],["dot","#fffaf0",12,5],["dot","#cf4631",5,5],["leaf","#4f8a3f",4,7]]},
+ gemuesebolo:{c:"plate",g:"#d9a441",l:[["strip","#f2d27a",24,9],["dot","#b5412a",14,5],["dot","#8a4a2a",10,4],["leaf","#4f8a3f",3,6]]},
+ rosenkohlofen:{c:"pan",g:"#6b5a44",l:[["dot","#5f9a45",14,7],["cube","#e6c76a",9,10],["dot","#f4eed8",5,3]]},
+ kuerbistortelloni:{c:"plate",g:"#f3d9a4",l:[["dot","#e8892f",10,6],["dot","#f7f1e0",12,6],["dot","#cf4631",8,4],["leaf","#4f8a3f",2,6]]},
  pizza:{c:"pizza",g:"#e8c88a",l:[["dot","#f7f1e0",10,10],["dot","#c93f2c",6,4],["leaf","#3f8a3a",7,7]]}
 };
 function illu(id){
