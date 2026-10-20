@@ -263,29 +263,47 @@ var REWE = {
   kartoffeln:{prod:"Speisekartoffeln 2,5 kg",pack:2500,price:1.99},
   zwiebeln:{prod:"Gelbe Speisezwiebeln 1,5 kg",pack:1500,price:1.39},
   passierte:{prod:"REWE Bio Passata 700 g",pack:700,price:1.29},
-  skyr:{prod:"Arla Skyr 250 g",pack:250,price:0.99}
+  skyr:{prod:"Arla Skyr 250 g",pack:250,price:0.99},
+  datteltomaten:{prod:"Cherry Romatomaten 250 g",pack:250,price:0.89}
 };
 var REWE_OFFERS = {
   week:REWE_WEEK,
-  summary:"Gemüse und Obst im Rewe-Prospekt. Passt zu Bolognese, Ofen-Rosenkohl und Kürbis-Tortelloni.",
+  summary:"Alles aus Obst und Gemüse, dazu vegetarisches Protein. Passt zu Bolognese, Ofen-Rosenkohl und Kürbis-Tortelloni.",
   items:[
-    {name:"Hokkaido-Kürbis",price:"0,89 € pro kg",store:"Rewe",note:"Aktion"},
-    {name:"Rosenkohl, 500 g",price:"0,79 €",store:"Rewe",note:"Knaller (1 kg = 1,58 €)"},
-    {name:"Speisekartoffeln, 2,5 kg",price:"1,99 €",store:"Rewe",note:"Tiefpreis (1 kg = 0,80 €)"},
-    {name:"Gelbe Zwiebeln, 1,5 kg",price:"1,39 €",store:"Rewe",note:"Tiefpreis"},
-    {name:"Suppengrün, 800 g",price:"1,79 €",store:"Rewe",note:"Aktion"},
-    {name:"Rote Tafeläpfel, 1 kg",price:"1,49 €",store:"Rewe",note:"Tiefpreis"},
-    {name:"Wirsing",price:"1,11 € pro kg",store:"Rewe",note:"Aktion"},
-    {name:"Radieschen, Bund",price:"0,55 €",store:"Rewe",note:"Aktion"},
-    {name:"Fenchel",price:"2,22 € pro kg",store:"Rewe",note:"Aktion"},
-    {name:"Taifun Räuchertofu, 200 g",price:"2,49 €",store:"Rewe",note:"Aktion"},
-    {name:"REWE Bio Falafel- oder Haferbällchen, 200 g",price:"1,79 €",store:"Rewe",note:"Aktion"},
-    {name:"Arla Skyr, 250 g",price:"0,99 €",store:"Rewe",note:"Aktion"},
-    {name:"REWE Bio Passata, 700 g",price:"1,29 €",store:"Rewe",note:"Aktion"},
-    {name:"ja! Hummus, 200 g",price:"0,79 €",store:"Rewe",note:"dauerhaft gesenkt"}
+    {name:"Hokkaido-Kürbis",price:"0,89 € pro kg",store:"Rewe",note:"Obst & Gemüse · Aktion"},
+    {name:"Rosenkohl, 500 g",price:"0,79 €",store:"Rewe",note:"Obst & Gemüse · Knaller (1 kg = 1,58 €)"},
+    {name:"Suppengrün, 800 g",price:"1,79 €",store:"Rewe",note:"Obst & Gemüse · Aktion (1 kg = 2,24 €)"},
+    {name:"Cherry Romatomaten, 250 g",price:"0,89 €",store:"Rewe",note:"Obst & Gemüse · Aktion (1 kg = 3,56 €)"},
+    {name:"Radieschen, Bund",price:"0,55 €",store:"Rewe",note:"Obst & Gemüse · Aktion"},
+    {name:"Wirsing",price:"1,11 € pro kg",store:"Rewe",note:"Obst & Gemüse · Aktion"},
+    {name:"Braune Bio-Champignons, 250 g",price:"1,79 €",store:"Rewe",note:"Obst & Gemüse · Aktion (1 kg = 7,16 €)"},
+    {name:"Fenchel",price:"2,22 € pro kg",store:"Rewe",note:"Obst & Gemüse · Aktion"},
+    {name:"Bio-Basilikum, Topf",price:"2,79 €",store:"Rewe",note:"Obst & Gemüse · Aktion"},
+    {name:"Wildkräuter Salat, 125 g",price:"1,19 €",store:"Rewe",note:"Obst & Gemüse · nur 21.10. bis 24.10."},
+    {name:"Speisekartoffeln, 2,5 kg",price:"1,99 €",store:"Rewe",note:"Obst & Gemüse · Tiefpreis (1 kg = 0,80 €)"},
+    {name:"Gelbe Zwiebeln, 1,5 kg",price:"1,39 €",store:"Rewe",note:"Obst & Gemüse · Tiefpreis (1 kg = 0,93 €)"},
+    {name:"Rote Tafeläpfel, 1 kg",price:"1,49 €",store:"Rewe",note:"Obst & Gemüse · Tiefpreis"},
+    {name:"Zitronen, 500 g",price:"0,99 €",store:"Rewe",note:"Obst & Gemüse · Tiefpreis"},
+    {name:"Mango, Stück",price:"0,99 €",store:"Rewe",note:"Obst & Gemüse · Tiefpreis"},
+    {name:"Orangen, 2 kg",price:"2,59 €",store:"Rewe",note:"Obst & Gemüse · Aktion (1 kg = 1,30 €)"},
+    {name:"Bunte Tafelbirnen",price:"2,79 € pro kg",store:"Rewe",note:"Obst & Gemüse · Aktion"},
+    {name:"Mix Tafeltrauben, 500 g",price:"1,99 €",store:"Rewe",note:"Obst & Gemüse · Aktion"},
+    {name:"Granatapfel, Stück",price:"1,29 €",store:"Rewe",note:"Obst & Gemüse · Knaller"},
+    {name:"Taifun Räuchertofu Klassik, 200 g",price:"2,49 €",store:"Rewe",note:"Vegetarisches Protein · Aktion"},
+    {name:"Dr. Oetker High Protein Pudding oder Porridge, 400 g",price:"1,99 €",store:"Rewe",note:"Vegetarisches Protein · Knaller"},
+    {name:"Arla Skyr, 250 g",price:"0,99 €",store:"Rewe",note:"Vegetarisches Protein · laut Prospekt"},
+    {name:"REWE Bio Falafel- oder Haferbällchen, 200 g",price:"1,79 €",store:"Rewe",note:"Vegetarisches Protein · laut Prospekt"},
+    {name:"ja! Hummus, 200 g",price:"0,79 €",store:"Rewe",note:"Vegetarisches Protein · laut Prospekt"},
+    {name:"The Vegetarian Butcher Crispy Chickimicki Burger, 180 g",price:"2,49 €",store:"Rewe",note:"Vegetarisches Protein · Aktion"},
+    {name:"Pahmeyer Mini Reibekuchen oder Süßkartoffel-Rösti, 300 g",price:"1,79 €",store:"Rewe",note:"Vegetarisches Protein · Aktion"},
+    {name:"Steinhaus Pasta Rustica (Ravioli), 400 g",price:"2,99 €",store:"Rewe",note:"Vegetarisches Protein · Aktion"},
+    {name:"Wagner Die Backfrische Mozzarella, 350 g",price:"1,99 €",store:"Rewe",note:"Vegetarisches Protein · Knaller"},
+    {name:"Frosta Gemüsepfanne, 480 g",price:"2,22 €",store:"Rewe",note:"Tiefkühl · Aktion"},
+    {name:"Philadelphia, 195 g",price:"1,11 €",store:"Rewe",note:"Kühlung · Knaller"},
+    {name:"REWE Bio Passata, 700 g",price:"1,29 €",store:"Rewe",note:"Kochen · Aktion"}
   ],
   recipes:["gemuesebolo","rosenkohlofen","kuerbistortelloni"],
-  source:"REWE-Prospekt KW 43 (Markt Fürther Str. 221 b, Nürnberg). Nicht alle Seiten geprüft, es kann weitere Angebote geben."
+  source:"rewe.de, Angebotsseite Markt Fürther Str. 221 b (abgerufen 20.10.2026) und Prospekt KW 43. Skyr, Falafel und Hummus stehen nur im Prospekt."
 };
 function reweActive(){ return iso(new Date()) <= REWE_UNTIL; }
 var ALWAYS = [
@@ -828,7 +846,7 @@ function offerDishes(){
 }
 function viewOffers(){
   var OFFERS = curOffers(); if (!OFFERS) return "";
-  var items = Array.isArray(OFFERS.items) ? OFFERS.items.slice(0, 14) : [];
+  var items = Array.isArray(OFFERS.items) ? OFFERS.items.slice(0, 60) : [];
   var dishes = offerDishes();
   var out = '<section class="card"><div class="store-h"><h3>Angebote dieser Woche</h3><span>' + esc(OFFERS.week || "") + '</span></div>';
   if (OFFERS.summary) out += '<p class="hint" style="margin:0 0 8px">' + esc(OFFERS.summary) + '</p>';
